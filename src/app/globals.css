@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/*
+ * DARIC OS — design tokens.
+ * A clean, professional internal dashboard. On-brand with the Daric agency:
+ * monochrome (black / white / neutral gray) with a small gold accent. Semantic
+ * status colors (blue/amber/violet/green/red) come from Tailwind for data clarity.
+ */
+
+:root {
+  --background: #f7f8fa;
+  --background-subtle: #eef0f3;
+  --surface: #ffffff;
+  --foreground: #14161a;
+  --muted: #6b7280;
+  --border: rgba(20, 22, 26, 0.09);
+
+  --accent: #a17c22; /* Daric gold — small accents only */
+  --accent-soft: rgba(161, 124, 34, 0.12);
+  --ring: rgba(161, 124, 34, 0.45);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-subtle: var(--background-subtle);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
