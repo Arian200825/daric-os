@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ExternalLink } from "lucide-react";
 import { NAV } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
@@ -42,9 +43,19 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      <div className="border-t border-border px-5 py-4">
-        <p className="text-xs text-muted">Signed in as</p>
-        <p className="text-sm font-medium">Daric Team</p>
+      <div className="flex flex-col gap-3 border-t border-border px-5 py-4">
+        <a
+          href="https://arian200825.github.io/daric-agency/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-xs font-medium text-muted transition-colors hover:text-foreground"
+        >
+          <ExternalLink className="h-3.5 w-3.5" /> View public site
+        </a>
+        <div>
+          <p className="text-xs text-muted">Signed in as</p>
+          <p className="text-sm font-medium">Daric Team</p>
+        </div>
       </div>
     </div>
   );

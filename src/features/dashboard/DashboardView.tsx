@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { NOW } from "@/data/seed";
 import { LEAD_STATUS_META, PROPOSAL_STATUS_META, type LeadStatus, type Tone } from "@/lib/models";
 import { formatMoney, relativeDay } from "@/lib/utils";
+import { SalesWorkflow } from "./SalesWorkflow";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { Card, CardHeader } from "@/components/ui/Card";
@@ -53,6 +54,8 @@ export function DashboardView() {
         <StatCard label="Pending Proposals" value={String(pendingProposals.length)} icon={FileText} hint={`${proposals.length} total`} />
         <StatCard label="Revenue (won)" value={formatMoney(wonRevenue)} icon={DollarSign} hint={`${formatMoney(pipelineValue)} in pipeline`} />
       </div>
+
+      <SalesWorkflow />
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent activity */}

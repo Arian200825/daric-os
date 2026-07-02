@@ -64,6 +64,26 @@ these field definitions — adding an industry never means bespoke CMS code.
 Proposals store structured line items + totals (`proposalTotal()`), so a PDF
 export is a rendering step over existing data — no schema changes needed.
 
+## Connecting the public sites (forms → CRM)
+
+Every Daric site (agency, restaurant, hotel, medical) feeds enquiries into the
+**unified Inbox**. Each site's form posts a source-tagged payload:
+
+```json
+{ "source": "restaurant", "name": "…", "email": "…", "subject": "…", "message": "…" }
+```
+
+- The demo forms already POST to a configurable endpoint (`config.*.endpoint`) and
+  now tag their `source` (agency · restaurant · hotel · medical).
+- Point each site's endpoint (set per source in **Settings → Integrations**) at the
+  OS inbox (a Supabase `inbox_messages` insert or a serverless function) and every
+  enquiry lands in the Inbox automatically.
+- From there the workflow is: **Inbox → convert to Lead → Discovery → Proposal →
+  Project → Launch** — visualized on the Dashboard (Sales workflow).
+
+The `InboxMessage` model + `FormSource` enum in `lib/models` are the shared
+contract both ends agree on.
+
 ## Run it
 
 ```bash

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, FolderKanban, FileText, Inbox, Database, Settings, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Users, FolderKanban, FileText, ClipboardList, Inbox, Database, Settings, type LucideIcon } from "lucide-react";
 
 export interface NavItem {
   label: string;
@@ -12,6 +12,7 @@ export const NAV: NavItem[] = [
   { label: "CRM", href: "/crm", icon: Users },
   { label: "Projects", href: "/projects", icon: FolderKanban },
   { label: "Proposals", href: "/proposals", icon: FileText },
+  { label: "Templates", href: "/templates", icon: ClipboardList },
   { label: "Inbox", href: "/inbox", icon: Inbox },
   { label: "CMS", href: "/cms", icon: Database },
   { label: "Settings", href: "/settings", icon: Settings },
