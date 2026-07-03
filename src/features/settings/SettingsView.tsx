@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Building2, Palette, Plug, SlidersHorizontal } from "lucide-react";
+import { Check, Building2, Palette, Plug, SlidersHorizontal, CreditCard } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { FORM_SOURCES, FORM_SOURCE_META } from "@/lib/models";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -69,6 +69,46 @@ export function SettingsView() {
                 <Input id={`ep-${s}`} placeholder="https://…/api/inbox" />
               </Field>
             ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Payments */}
+      <Card>
+        <CardHeader
+          title={<span className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-accent" /> Payments</span>}
+          action={<Badge tone="neutral">Not processing yet</Badge>}
+        />
+        <div className="flex flex-col gap-5 p-5">
+          <p className="text-sm text-muted">
+            Configure how clients pay. Architecture is prepared for Stripe, PayPal, and Wise — no payments are
+            processed until keys are added and processing is enabled. Secret keys are stored server-side only.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm font-semibold">Stripe</p>
+              <p className="mt-1 text-xs text-muted">Cards, subscriptions, invoices.</p>
+              <div className="mt-3 flex flex-col gap-3">
+                <Field label="Publishable key" htmlFor="pk-stripe"><Input id="pk-stripe" placeholder="pk_live_…" /></Field>
+                <p className="text-[11px] text-muted">Secret key via <code>STRIPE_SECRET_KEY</code> (server).</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm font-semibold">PayPal</p>
+              <p className="mt-1 text-xs text-muted">Familiar, fast checkout.</p>
+              <div className="mt-3 flex flex-col gap-3">
+                <Field label="Client ID" htmlFor="pp-client"><Input id="pp-client" placeholder="AXx…" /></Field>
+                <p className="text-[11px] text-muted">Secret via <code>PAYPAL_SECRET</code> (server).</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm font-semibold">Wise</p>
+              <p className="mt-1 text-xs text-muted">Low-fee international transfers.</p>
+              <div className="mt-3 flex flex-col gap-3">
+                <Field label="Payment link" htmlFor="wise-link"><Input id="wise-link" placeholder="https://wise.com/pay/…" /></Field>
+                <p className="text-[11px] text-muted">API token via <code>WISE_API_TOKEN</code> (server).</p>
+              </div>
+            </div>
           </div>
         </div>
       </Card>

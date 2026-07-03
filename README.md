@@ -92,6 +92,35 @@ npm run dev      # http://localhost:3000
 npm run build    # static export (seed data) → out/
 ```
 
+## Environment variables
+
+All optional — the OS runs on seed data with none set. See `.env.example`.
+
+| Variable | Scope | Purpose |
+| -------- | ----- | ------- |
+| `NEXT_PUBLIC_SUPABASE_URL` / `_ANON_KEY` | public | Data layer (leads, projects, proposals, inbox) |
+| `SUPABASE_SERVICE_ROLE_KEY` | server | Privileged reads/writes in route handlers |
+| `RESEND_API_KEY`, `EMAIL_FROM` | server | Transactional email (`src/lib/email.ts`) |
+| `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | mixed | Stripe (Payments settings) |
+| `PAYPAL_SECRET`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | mixed | PayPal |
+| `WISE_API_TOKEN` | server | Wise |
+| `NEXT_PUBLIC_BASE_PATH` | build | GitHub Pages project path (e.g. `/daric-os`) |
+
+**Security:** secret keys (`*_SECRET`, `RESEND_API_KEY`, service role) are used
+**server-side only** — never prefixed `NEXT_PUBLIC_`, never shipped to the client.
+Supabase tables use Row Level Security (`supabase/schema.sql`): anon may INSERT
+enquiries; staff read/manage via authenticated policies. Rate limiting belongs at
+the ingestion edge (serverless function / Supabase Edge Function) — see the inbox
+integration notes.
+
+## Deployment
+
+- **Demo (current):** static export on seed data → GitHub Pages.
+  `NEXT_PUBLIC_BASE_PATH=/daric-os npm run build`, publish `out/` to `gh-pages`.
+- **Real internal tool:** deploy as a **server app** (Vercel/Node) with Supabase
+  (data + auth) and the email/payment envs set. Add authentication before exposing
+  real client data — the OS is an internal tool.
+
 ## Notes
 - The deployed demo is a **static export on seed data** (no auth, no DB) — a
   showcase. A real internal deployment would add Supabase (data + auth) and run
