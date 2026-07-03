@@ -4,7 +4,8 @@ import { formatMoney } from "./utils";
  * Transactional email templates + sender for Daric OS events.
  *
  * ⚠️  Runs SERVER-SIDE only (route handler / Edge Function) so keys stay secret.
- * Env: RESEND_API_KEY, EMAIL_FROM (e.g. "Daric <hello@daric.agency>").
+ * Env: RESEND_API_KEY, EMAIL_FROM (e.g. "Daric <daricone.web@gmail.com>"),
+ * CONTACT_EMAIL (defaults the from-address; set once, change without code).
  *
  * Together with the agency's contact/lead emails, this completes the five-email
  * transactional set: contact confirmation, new lead, proposal sent,
@@ -63,15 +64,20 @@ export function projectCompleted(args: { client: string; projectName: string }):
   };
 }
 
-/** Send via Resend. No-ops (returns false) until RESEND_API_KEY + EMAIL_FROM are set. */
+/** Send via Resend. No-ops (returns false) until RESEND_API_KEY is set. */
 export async function sendEmail(to: string, template: EmailTemplate): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM;
-  if (!key || !from) return false;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to, subject: template.subject, html: template.html, text: template.text }),
-  });
-  return res.ok;
+  const contact = process.env.CONTACT_EMAIL || "daricone.web@gmail.com";
+  const from = process.env.EMAIL_FROM || `${BRAND} <${contact}>`;
+  if (!key) return false;
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to, subject: template.subject, html: template.html, text: template.text }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }

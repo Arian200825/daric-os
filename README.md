@@ -20,6 +20,7 @@ Supabase (data layer).
 | `/proposals` | **Proposals** | Proposal records + create form with line items; document preview (PDF-export-ready model) |
 | `/inbox` | **Inbox** | Unified enquiry feed — agency, restaurant, hotel & medical forms all land here |
 | `/cms` | **CMS** | The typed content-model registry that future editors will be generated from (no editors yet) |
+| `/payments` | **Payments** | Deposit settings + provider config (Stripe, PayPal, Wise) + the deposit workflow — architecture only, no processing |
 | `/settings` | **Settings** | Business info, brand, integrations, preferences |
 
 ## Architecture
@@ -84,6 +85,29 @@ Every Daric site (agency, restaurant, hotel, medical) feeds enquiries into the
 The `InboxMessage` model + `FormSource` enum in `lib/models` are the shared
 contract both ends agree on.
 
+## Payment setup (deposits)
+
+The **Payments** page configures how clients pay a deposit before a project
+starts. The architecture is prepared but **no payments are processed** until you
+connect a provider:
+
+- **Deposit settings** — default deposit %, minimum, and currency (per-proposal
+  override).
+- **Providers** — Stripe (cards/invoices), PayPal (checkout), Wise (transfers).
+  Publishable identifiers live in the UI; **secret keys are read from server-side
+  env vars only** (`STRIPE_SECRET_KEY`, `PAYPAL_SECRET`, `WISE_API_TOKEN`).
+- **Deposit workflow** — proposal accepted → deposit invoice → deposit paid →
+  project moves to *In Progress*.
+
+No card data ever touches Daric OS — providers host their own secure checkout.
+
+## Email setup
+
+Transactional templates + a Resend sender live in `src/lib/email.ts` (proposal
+sent, project started, project completed). Set `RESEND_API_KEY` and, optionally,
+`EMAIL_FROM` / `CONTACT_EMAIL` (the from-address defaults to
+`daricone.web@gmail.com`). Runs server-side; safely no-ops until a key is set.
+
 ## Run it
 
 ```bash
@@ -100,8 +124,8 @@ All optional — the OS runs on seed data with none set. See `.env.example`.
 | -------- | ----- | ------- |
 | `NEXT_PUBLIC_SUPABASE_URL` / `_ANON_KEY` | public | Data layer (leads, projects, proposals, inbox) |
 | `SUPABASE_SERVICE_ROLE_KEY` | server | Privileged reads/writes in route handlers |
-| `RESEND_API_KEY`, `EMAIL_FROM` | server | Transactional email (`src/lib/email.ts`) |
-| `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | mixed | Stripe (Payments settings) |
+| `RESEND_API_KEY`, `EMAIL_FROM`, `CONTACT_EMAIL` | server | Transactional email (`src/lib/email.ts`) |
+| `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | mixed | Stripe (Payments page) |
 | `PAYPAL_SECRET`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | mixed | PayPal |
 | `WISE_API_TOKEN` | server | Wise |
 | `NEXT_PUBLIC_BASE_PATH` | build | GitHub Pages project path (e.g. `/daric-os`) |

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Building2, Palette, Plug, SlidersHorizontal, CreditCard } from "lucide-react";
+import Link from "next/link";
+import { Check, Building2, Palette, Plug, SlidersHorizontal, CreditCard, ArrowRight } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { FORM_SOURCES, FORM_SOURCE_META } from "@/lib/models";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -32,7 +33,7 @@ export function SettingsView() {
         <CardHeader title={<span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-accent" /> Business information</span>} />
         <div className="grid gap-4 p-5 sm:grid-cols-2">
           <Field label="Agency name" htmlFor="s-name"><Input id="s-name" defaultValue="Daric" /></Field>
-          <Field label="Contact email" htmlFor="s-email"><Input id="s-email" type="email" defaultValue="hello@daric.agency" /></Field>
+          <Field label="Contact email" htmlFor="s-email"><Input id="s-email" type="email" defaultValue="daricone.web@gmail.com" /></Field>
           <Field label="Phone" htmlFor="s-phone"><Input id="s-phone" defaultValue="+1 (415) 555-0100" /></Field>
           <Field label="Default currency" htmlFor="s-currency"><Input id="s-currency" defaultValue="USD" /></Field>
         </div>
@@ -73,43 +74,16 @@ export function SettingsView() {
         </div>
       </Card>
 
-      {/* Payments */}
+      {/* Payments — configured on its own page */}
       <Card>
-        <CardHeader
-          title={<span className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-accent" /> Payments</span>}
-          action={<Badge tone="neutral">Not processing yet</Badge>}
-        />
-        <div className="flex flex-col gap-5 p-5">
+        <CardHeader title={<span className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-accent" /> Payments</span>} />
+        <div className="flex flex-col items-start gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted">
-            Configure how clients pay. Architecture is prepared for Stripe, PayPal, and Wise — no payments are
-            processed until keys are added and processing is enabled. Secret keys are stored server-side only.
+            Deposits and payment providers (Stripe, PayPal, Wise) are configured on the dedicated Payments page.
           </p>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-lg border border-border bg-background p-4">
-              <p className="text-sm font-semibold">Stripe</p>
-              <p className="mt-1 text-xs text-muted">Cards, subscriptions, invoices.</p>
-              <div className="mt-3 flex flex-col gap-3">
-                <Field label="Publishable key" htmlFor="pk-stripe"><Input id="pk-stripe" placeholder="pk_live_…" /></Field>
-                <p className="text-[11px] text-muted">Secret key via <code>STRIPE_SECRET_KEY</code> (server).</p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <p className="text-sm font-semibold">PayPal</p>
-              <p className="mt-1 text-xs text-muted">Familiar, fast checkout.</p>
-              <div className="mt-3 flex flex-col gap-3">
-                <Field label="Client ID" htmlFor="pp-client"><Input id="pp-client" placeholder="AXx…" /></Field>
-                <p className="text-[11px] text-muted">Secret via <code>PAYPAL_SECRET</code> (server).</p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <p className="text-sm font-semibold">Wise</p>
-              <p className="mt-1 text-xs text-muted">Low-fee international transfers.</p>
-              <div className="mt-3 flex flex-col gap-3">
-                <Field label="Payment link" htmlFor="wise-link"><Input id="wise-link" placeholder="https://wise.com/pay/…" /></Field>
-                <p className="text-[11px] text-muted">API token via <code>WISE_API_TOKEN</code> (server).</p>
-              </div>
-            </div>
-          </div>
+          <Link href="/payments" className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-accent hover:underline">
+            Open Payments <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </Card>
 
